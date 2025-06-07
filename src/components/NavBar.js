@@ -31,7 +31,7 @@ export default function NavBar() {
             <Link className="nav-link" href="/categories" style={{ color: 'lightblue' }}>
               Categories
             </Link>
-            <Link className="nav-link" href="/login" style={{ color: 'lightblue' }}>
+            <Link className="nav-link" href="/" style={{ color: 'lightblue' }}>
               Logins
             </Link>
           </Nav>
