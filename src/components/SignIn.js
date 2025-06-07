@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import Image from 'next/image';
 import { signIn } from '../utils/auth';
 
 function Signin() {
@@ -13,8 +14,9 @@ function Signin() {
         margin: '0 auto',
       }}
     >
-      <h1>Hi there!</h1>
-      <p>Click the button below to login!</p>
+      <Image src="/images/AS-Logo.png" alt="AgentSecure Logo" width={200} height={200} style={{ alignSelf: 'center' }} />
+      <h1>Welcome to AgentSecure!</h1>
+      <p>Sign in to access your vendors and login details</p>
       <Button type="button" size="lg" className="copy-btn" onClick={signIn}>
         Sign In
       </Button>
