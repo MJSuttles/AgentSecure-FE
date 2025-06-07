@@ -2,7 +2,7 @@ import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
-export const getAllCategories = () =>
+const getAllCategories = () =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/api/categories`, {
       method: 'GET',
@@ -21,7 +21,7 @@ export const getAllCategories = () =>
       .catch(reject);
   });
 
-export const getCategoryById = (id) =>
+const getCategoryById = (id) =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/api/categories/${id}`, {
       method: 'GET',
@@ -34,7 +34,7 @@ export const getCategoryById = (id) =>
       .catch(reject);
   });
 
-export const createCategory = (payload) =>
+const createCategory = (payload) =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/api/categories`, {
       method: 'POST',
@@ -48,7 +48,7 @@ export const createCategory = (payload) =>
       .catch(reject);
   });
 
-export const updateCategory = (id, payload) =>
+const updateCategory = (id, payload) =>
   new Promise((resolve, reject) => {
     fetch(`${endpoint}/api/categories/${id}`, {
       method: 'PUT',
@@ -62,7 +62,7 @@ export const updateCategory = (id, payload) =>
       .catch(reject);
   });
 
-export const deleteCategory = async (id) => {
+const deleteCategory = async (id) => {
   const response = await fetch(`${endpoint}/api/categories/${id}`, {
     method: 'DELETE',
     headers: {
@@ -76,3 +76,5 @@ export const deleteCategory = async (id) => {
 
   return response.json();
 };
+
+export { getAllCategories, getCategoryById, createCategory, updateCategory, deleteCategory };
