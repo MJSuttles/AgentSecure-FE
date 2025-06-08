@@ -2,9 +2,9 @@ import { clientCredentials } from '../utils/client';
 
 const endpoint = clientCredentials.databaseURL;
 
-const getAllLogins = () =>
+const getAllLoginsByUserId = (userId) =>
   new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/logins`, {
+    fetch(`${endpoint}/api/logins/user/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -77,4 +77,4 @@ const deleteLogin = async (id) => {
   return response.json();
 };
 
-export { getAllLogins, getLoginById, createLogin, updateLogin, deleteLogin };
+export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin };
