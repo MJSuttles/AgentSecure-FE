@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/utils/context/authContext';
-import { getAllLogins } from '@/api/loginData';
+import { getAllLoginsByUserId } from '@/api/loginData';
 import LoginCard from '@/components/LoginCard';
 
 function Home() {
@@ -11,7 +11,7 @@ function Home() {
   const { user } = useAuth();
 
   const refreshLogins = () => {
-    getAllLogins().then((fetchedLogins) => {
+    getAllLoginsByUserId(user.id).then((fetchedLogins) => {
       const sortedLogins = fetchedLogins.sort((a, b) => a.vendorName.localeCompare(b.vendorName));
       setLogins(sortedLogins);
     });
