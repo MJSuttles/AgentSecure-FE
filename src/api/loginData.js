@@ -34,8 +34,9 @@ const getLoginById = (id) =>
       .catch(reject);
   });
 
-const createLogin = (payload) =>
-  new Promise((resolve, reject) => {
+const createLogin = (payload) => {
+  console.log('Creating login with payload:', payload);
+  return new Promise((resolve, reject) => {
     fetch(`${endpoint}/api/logins`, {
       method: 'POST',
       headers: {
@@ -47,6 +48,7 @@ const createLogin = (payload) =>
       .then((data) => resolve(data))
       .catch(reject);
   });
+};
 
 const updateLogin = (id, payload) =>
   new Promise((resolve, reject) => {
