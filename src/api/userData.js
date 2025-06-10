@@ -61,4 +61,20 @@ const deleteUser = (id) =>
       .catch(reject);
   });
 
-export { getUserById, createUser, updateUser, deleteUser };
+const getUserByFirebaseUid = (uid) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/api/users/uid/${uid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('User not found');
+        return res.json();
+      })
+      .then((data) => resolve(data))
+      .catch(reject);
+  });
+
+export { getUserById, createUser, updateUser, deleteUser, getUserByFirebaseUid };

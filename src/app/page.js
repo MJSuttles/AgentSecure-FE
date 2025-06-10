@@ -4,22 +4,36 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/utils/context/authContext';
 import { getAllLoginsByUserId } from '@/api/loginData';
+import { getUserByFirebaseUid } from '@/api/userData';
 import LoginCard from '@/components/LoginCard';
 
 function Home() {
   const [logins, setLogins] = useState([]);
-  const { user } = useAuth();
+  const [dbUserId, setDbUserId] = useState(null); // <-- track DB user ID
+  const { user } = useAuth(); // Firebase UID here (user.uid)
 
-  const refreshLogins = () => {
-    getAllLoginsByUserId(user.id).then((fetchedLogins) => {
+  const refreshLogins = (resolvedUserId) => {
+    getAllLoginsByUserId(resolvedUserId).then((fetchedLogins) => {
       const sortedLogins = fetchedLogins.sort((a, b) => a.vendorName.localeCompare(b.vendorName));
       setLogins(sortedLogins);
     });
   };
 
   useEffect(() => {
-    if (user) refreshLogins();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (user?.uid) {
+      getUserByFirebaseUid(user.uid)
+        .then((dbUser) => {
+          if (dbUser?.id) {
+            setDbUserId(dbUser.id); // set state for reuse
+            refreshLogins(dbUser.id);
+          } else {
+            console.error('No matching DB user for UID:', user.uid);
+          }
+        })
+        .catch((err) => {
+          console.error('Error fetching user by UID:', err);
+        });
+    }
   }, [user]);
 
   return (
@@ -31,9 +45,7 @@ function Home() {
         </button>
       </Link>
 
-      {/* Shared wrapper ensures perfect alignment */}
       <div style={{ width: '70%', margin: '0 auto' }}>
-        {/* Header Row */}
         <div className="row fw-bold border-bottom text-start" style={{ height: '3rem' }}>
           <div className="col">Vendor</div>
           <div className="col">Username</div>
@@ -44,9 +56,8 @@ function Home() {
           <div className="col">Actions</div>
         </div>
 
-        {/* Login Cards */}
         {logins.map((login) => (
-          <LoginCard key={login.id} loginObj={login} onUpdate={refreshLogins} />
+          <LoginCard key={login.id} loginObj={login} onUpdate={() => refreshLogins(dbUserId)} />
         ))}
       </div>
     </div>
