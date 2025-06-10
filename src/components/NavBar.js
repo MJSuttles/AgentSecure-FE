@@ -35,9 +35,16 @@ export default function NavBar() {
               Logins
             </Link>
           </Nav>
-          <Button variant="outline-light" onClick={signOut}>
-            Sign Out
-          </Button>
+
+          {/* Right side: User Profile + Sign Out */}
+          <Nav className="align-items-center">
+            <Link className="nav-link" href="/users" style={{ color: 'lightblue' }}>
+              User Profile
+            </Link>
+            <Button variant="outline-light" onClick={signOut}>
+              Sign Out
+            </Button>
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
