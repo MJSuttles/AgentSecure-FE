@@ -53,7 +53,7 @@ export default function ViewLogin({ params }) {
             Password: <strong>{login.password}</strong>
           </p>
           <p>
-            Reg Approved: <strong>{login.regApproved ? 'Yes' : 'No'}</strong>
+            Registration Approved: <strong>{login.regApproved ? 'Yes' : 'No'}</strong>
           </p>
           <p>
             Training Complete: <strong>{login.trainingComplete ? 'Yes' : 'No'}</strong>
