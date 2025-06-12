@@ -18,11 +18,12 @@ const initialFormState = {
 };
 
 export default function LoginForm({ obj = initialFormState }) {
-  const { user } = useAuth(); // user.uid should be the Firebase UID
+  const { user } = useAuth(); // Firebase UID
   const router = useRouter();
 
   const [formInput, setFormInput] = useState(obj);
   const [vendors, setVendors] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     getAllVendors().then((data) => {
@@ -47,7 +48,7 @@ export default function LoginForm({ obj = initialFormState }) {
     e.preventDefault();
 
     const payload = {
-      user: { uid: user.uid }, // send UID to backend
+      user: { uid: user.uid },
       vendorId: parseInt(formInput.vendorId, 10),
       username: formInput.username,
       email: formInput.email,
@@ -56,11 +57,14 @@ export default function LoginForm({ obj = initialFormState }) {
       trainingComplete: formInput.trainingComplete,
     };
 
-    if (obj.id) {
-      updateLogin(obj.id, payload).then(() => router.push(`/logins/${obj.id}`));
-    } else {
-      createLogin(payload).then(() => router.push('/'));
-    }
+    const redirectPath = obj.id ? `/logins/${obj.id}` : '/';
+
+    const submitAction = obj.id ? updateLogin(obj.id, payload) : createLogin(payload);
+
+    submitAction.then(() => {
+      setFormInput({ ...initialFormState, password: '' }); // Clear password after submission
+      router.push(redirectPath);
+    });
   };
 
   return (
@@ -92,7 +96,8 @@ export default function LoginForm({ obj = initialFormState }) {
 
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" name="password" value={formInput.password} onChange={handleChange} required />
+          <Form.Control type={showPassword ? 'text' : 'password'} placeholder="Password" name="password" value={formInput.password} onChange={handleChange} required />
+          <Form.Check type="checkbox" label="Show Password" checked={showPassword} onChange={() => setShowPassword(!showPassword)} className="mt-2" />
         </Form.Group>
 
         <Form.Group className="mb-3">

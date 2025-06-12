@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import LoginForm from '../../../../components/forms/LoginForm';
 import { getLoginById } from '../../../../api/loginData';
+import ChangePasswordForm from '../../../../components/forms/ChangePasswordForm';
 
 export default function EditLogin({ params }) {
   const { id: loginId } = params;
@@ -13,7 +14,20 @@ export default function EditLogin({ params }) {
     getLoginById(loginId).then(setFormInput);
   }, [loginId]);
 
-  return <div>{formInput ? <LoginForm obj={formInput} /> : <p>Loading...</p>}</div>;
+  return (
+    <div>
+      {formInput ? (
+        <>
+          <LoginForm obj={formInput} />
+          <hr />
+          <h3>Change Password</h3>
+          <ChangePasswordForm loginId={loginId} />
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
+    </div>
+  );
 }
 
 EditLogin.propTypes = {
