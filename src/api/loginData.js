@@ -21,18 +21,11 @@ const getAllLoginsByUserId = (userId) =>
       .catch(reject);
   });
 
-const getLoginById = (id) =>
-  new Promise((resolve, reject) => {
-    fetch(`${endpoint}/api/logins/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => resolve(data))
-      .catch(reject);
-  });
+const getLoginById = async (id) => {
+  const res = await fetch(`${endpoint}/api/logins/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch login');
+  return res.json();
+};
 
 const createLogin = (payload) => {
   console.log('Creating login with payload:', payload);
@@ -79,4 +72,10 @@ const deleteLogin = async (id) => {
   return response.json();
 };
 
-export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin };
+const revealPasswordById = async (id) => {
+  const res = await fetch(`${endpoint}/api/logins/reveal-password/${id}`);
+  if (!res.ok) throw new Error('Failed to reveal password');
+  return res.text(); // since your endpoint returns plain string, not JSON
+};
+
+export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin, revealPasswordById };
