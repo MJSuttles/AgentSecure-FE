@@ -78,4 +78,29 @@ const revealPasswordById = async (id) => {
   return res.text(); // since your endpoint returns plain string, not JSON
 };
 
-export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin, revealPasswordById };
+const changePassword = (payload) =>
+  new Promise((resolve, reject) => {
+    fetch(`${endpoint}/api/logins/change-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        loginId: Number(payload.loginId), // ✅ ensure it's a number
+        newPassword: payload.newPassword,
+        confirmNewPassword: payload.confirmNewPassword,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((error) => {
+            reject(new Error(error.message || 'Password update failed'));
+          });
+        }
+        return response.json();
+      })
+      .then(resolve)
+      .catch(reject);
+  });
+
+export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin, revealPasswordById, changePassword };
