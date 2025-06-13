@@ -20,7 +20,6 @@ export default function EditLogin({ params }) {
         <>
           <LoginForm obj={formInput} />
           <hr />
-          <h3>Change Password</h3>
           <ChangePasswordForm loginId={loginId} />
         </>
       ) : (
