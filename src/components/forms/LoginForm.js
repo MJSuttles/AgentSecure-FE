@@ -7,6 +7,7 @@ import { Form } from 'react-bootstrap';
 import { useAuth } from '@/utils/context/authContext';
 import { createLogin, updateLogin } from '@/api/loginData';
 import { getAllVendors } from '@/api/vendorData';
+import ChangePasswordForm from './ChangePasswordForm';
 
 const initialFormState = {
   vendorId: '',
@@ -18,12 +19,12 @@ const initialFormState = {
 };
 
 export default function LoginForm({ obj = initialFormState }) {
-  const { user } = useAuth(); // Firebase UID
+  const { user } = useAuth();
   const router = useRouter();
+  const isEditMode = !!obj.id;
 
   const [formInput, setFormInput] = useState(obj);
   const [vendors, setVendors] = useState([]);
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     getAllVendors().then((data) => {
@@ -31,7 +32,9 @@ export default function LoginForm({ obj = initialFormState }) {
       setVendors(sorted);
     });
 
-    if (obj.id) setFormInput(obj);
+    if (obj.id) {
+      setFormInput(obj);
+    }
   }, [obj]);
 
   const handleChange = (e) => {
@@ -44,6 +47,14 @@ export default function LoginForm({ obj = initialFormState }) {
     }));
   };
 
+  // Callback for ChangePasswordForm
+  const handlePasswordChanged = () => {
+    setFormInput((prev) => ({
+      ...prev,
+      password: '[HIDDEN]',
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -52,24 +63,28 @@ export default function LoginForm({ obj = initialFormState }) {
       vendorId: parseInt(formInput.vendorId, 10),
       username: formInput.username,
       email: formInput.email,
-      password: formInput.password,
       regApproved: formInput.regApproved,
       trainingComplete: formInput.trainingComplete,
     };
 
-    const redirectPath = obj.id ? `/logins/${obj.id}` : '/';
+    // Only include password if it's not blank and not '[HIDDEN]'
+    if (typeof formInput.password === 'string' && formInput.password.trim() !== '' && formInput.password !== '[HIDDEN]') {
+      payload.password = formInput.password;
+    }
 
-    const submitAction = obj.id ? updateLogin(obj.id, payload) : createLogin(payload);
+    const redirectPath = formInput.id ? `/logins/${formInput.id}` : '/';
+
+    const submitAction = formInput.id ? updateLogin(formInput.id, payload) : createLogin(payload);
 
     submitAction.then(() => {
-      setFormInput({ ...initialFormState, password: '' }); // Clear password after submission
+      setFormInput({ ...initialFormState, password: '' });
       router.push(redirectPath);
     });
   };
 
   return (
     <div className="d-flex flex-column align-items-center my-4" id="add-update-logins">
-      <h1 className="my-5">{obj.id ? 'Update' : 'Create'} Login</h1>
+      <h1 className="my-5">{isEditMode ? 'Update' : 'Create'} Login</h1>
 
       <Form onSubmit={handleSubmit} className="text-center" style={{ width: '75%' }}>
         <Form.Group className="mb-3">
@@ -94,11 +109,13 @@ export default function LoginForm({ obj = initialFormState }) {
           <Form.Control type="email" placeholder="Email" name="email" value={formInput.email} onChange={handleChange} required />
         </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type={showPassword ? 'text' : 'password'} placeholder="Password" name="password" value={formInput.password} onChange={handleChange} required />
-          <Form.Check type="checkbox" label="Show Password" checked={showPassword} onChange={() => setShowPassword(!showPassword)} className="mt-2" />
-        </Form.Group>
+        {/* Password field only during creation */}
+        {!isEditMode && (
+          <Form.Group className="mb-3">
+            <Form.Label>Password</Form.Label>
+            <Form.Control type="password" placeholder="Password" name="password" value={formInput.password} onChange={handleChange} required />
+          </Form.Group>
+        )}
 
         <Form.Group className="mb-3">
           <Form.Check type="checkbox" label="Registration Approved" name="regApproved" checked={formInput.regApproved} onChange={handleChange} />
@@ -109,9 +126,22 @@ export default function LoginForm({ obj = initialFormState }) {
         </Form.Group>
 
         <button className="btn btn-primary" type="submit">
-          {obj.id ? 'Update' : 'Create'} Login
+          {isEditMode ? 'Update' : 'Create'} Login
         </button>
       </Form>
+
+      {/* Show Change Password and Back button only in edit mode */}
+      {isEditMode && (
+        <>
+          <hr className="my-5" />
+          <div className="d-flex justify-content-center align-items-center gap-3">
+            <ChangePasswordForm loginId={obj.id} onPasswordChanged={handlePasswordChanged} />
+            <button type="button" className="btn btn-secondary ms-3" onClick={() => router.push('/')}>
+              Back to Logins
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

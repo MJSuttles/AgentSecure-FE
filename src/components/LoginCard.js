@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/navigation';
 import { Card, Dropdown, ButtonGroup } from 'react-bootstrap';
-import { deleteLogin, revealPasswordById } from '@/api/loginData'; // adjust as needed
+import { deleteLogin, revealPasswordByLoginId } from '@/api/loginData'; // adjust as needed
 
 export default function LoginCard({ loginObj, onUpdate }) {
   const router = useRouter();
@@ -22,7 +22,8 @@ export default function LoginCard({ loginObj, onUpdate }) {
       setShowPassword(false);
     } else {
       try {
-        const revealed = await revealPasswordById(loginObj.id);
+        const revealed = await revealPasswordByLoginId(loginObj.id);
+        console.log('Revealed password:', revealed);
         setDecryptedPassword(revealed);
         setShowPassword(true);
       } catch (err) {
