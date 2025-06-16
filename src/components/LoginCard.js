@@ -35,9 +35,12 @@ export default function LoginCard({ loginObj, onUpdate }) {
   return (
     <Card className="mb-3">
       <Card.Body>
-        <Card.Title>{loginObj.username}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">{loginObj.vendorName}</Card.Subtitle>
+        <Card.Title>
+          <strong>{loginObj.vendorName}</strong>
+        </Card.Title>
         <Card.Text>
+          <strong>Username:</strong> {loginObj.username}
+          <br />
           <strong>Email:</strong> {loginObj.email}
           <br />
           <strong>Password:</strong>{' '}
