@@ -72,10 +72,10 @@ const deleteLogin = async (id) => {
   return response.json();
 };
 
-const revealPasswordById = async (id) => {
-  const res = await fetch(`${endpoint}/api/logins/reveal-password/${id}`);
+const revealPasswordByLoginId = async (loginId) => {
+  const res = await fetch(`${endpoint}/api/logins/reveal-password/${loginId}`);
   if (!res.ok) throw new Error('Failed to reveal password');
-  return res.text(); // since your endpoint returns plain string, not JSON
+  return res.text();
 };
 
 const changePassword = (payload) =>
@@ -103,4 +103,4 @@ const changePassword = (payload) =>
       .catch(reject);
   });
 
-export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin, revealPasswordById, changePassword };
+export { getAllLoginsByUserId, getLoginById, createLogin, updateLogin, deleteLogin, changePassword, revealPasswordByLoginId };
