@@ -19,7 +19,6 @@ export default function EditLogin({ params }) {
         <>
           <LoginForm obj={formInput} />
           <hr />
-          {/* <ChangePasswordForm loginId={loginId} /> */}
         </>
       ) : (
         <p>Loading...</p>

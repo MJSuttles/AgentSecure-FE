@@ -77,7 +77,7 @@ LoginCard.propTypes = {
     vendorName: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    password: PropTypes.string, // <-- ADD THIS
+    password: PropTypes.string,
     regApproved: PropTypes.bool.isRequired,
     trainingComplete: PropTypes.bool.isRequired,
   }).isRequired,
