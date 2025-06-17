@@ -9,8 +9,8 @@ import LoginCard from '@/components/LoginCard';
 
 function Home() {
   const [logins, setLogins] = useState([]);
-  const [dbUserId, setDbUserId] = useState(null); // <-- track DB user ID
-  const { user } = useAuth(); // Firebase UID here (user.uid)
+  const [dbUserId, setDbUserId] = useState(null);
+  const { user } = useAuth();
 
   const refreshLogins = (resolvedUserId) => {
     getAllLoginsByUserId(resolvedUserId).then((fetchedLogins) => {
@@ -24,7 +24,7 @@ function Home() {
       getUserByFirebaseUid(user.uid)
         .then((dbUser) => {
           if (dbUser?.id) {
-            setDbUserId(dbUser.id); // set state for reuse
+            setDbUserId(dbUser.id);
             refreshLogins(dbUser.id);
           } else {
             console.error('No matching DB user for UID:', user.uid);
@@ -46,16 +46,6 @@ function Home() {
       </Link>
 
       <div style={{ width: '70%', margin: '0 auto' }}>
-        <div className="row fw-bold border-bottom text-start" style={{ height: '3rem' }}>
-          <div className="col">Vendor</div>
-          <div className="col">Username</div>
-          <div className="col">Email</div>
-          <div className="col">Password</div>
-          <div className="col">Reg Approved</div>
-          <div className="col">Training Complete</div>
-          <div className="col">Actions</div>
-        </div>
-
         {logins.map((login) => (
           <LoginCard key={login.id} loginObj={login} onUpdate={() => refreshLogins(dbUserId)} />
         ))}
